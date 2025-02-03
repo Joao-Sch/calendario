@@ -4,14 +4,16 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Input, Button, Flex } from "@chakra-ui/react";
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import { User } from "@/types/user";
 
 interface IProps {
   currentUser?: User;
+  onAddItem: (user: User) => void;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
-export const UserForm: React.FC<IProps> = ({ currentUser }) => {
+export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
   const {
     register,
     handleSubmit,
@@ -21,14 +23,11 @@ export const UserForm: React.FC<IProps> = ({ currentUser }) => {
       email: "",
       password: "",
     },
-  });
+  }); 
 
-  const onSubmit = (data: User) => {
-    console.log("data", data);
-    localStorage.setItem("email", currentUser?.email || "");
-    console.log(localStorage.getItem("email") + "faz parte menina se prepara");
+  const handleAddUser = (data: User) => {
+    onAddItem(data);
   };
-
 
   return (
     <Flex align="center" margin={5} justify="center">
@@ -36,7 +35,7 @@ export const UserForm: React.FC<IProps> = ({ currentUser }) => {
         <h1>Seja Bem-Vindo de Volta!</h1>
 
         <Input
-          className={errors?.password && "inputError"}
+          className={errors?.email ? "inputError" : ""}
           placeholder="Insira seu Email"
           padding={3}
           maxLength={80}
@@ -47,7 +46,6 @@ export const UserForm: React.FC<IProps> = ({ currentUser }) => {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               message: "Formato de email inválido",
             },
-
             onChange: (value) => {
               if (currentUser) {
                 currentUser.email = value.target.value;
@@ -55,33 +53,26 @@ export const UserForm: React.FC<IProps> = ({ currentUser }) => {
             },
           })}
         />
-        {errors?.email?.type === "required" && <p>O email é obrigratorio!</p>}
-        {errors?.email?.type === "pattern" && <p>Email invalido!</p>}
+        {errors?.email?.type === "required" && <p>O email é obrigatório!</p>}
+        {errors?.email?.type === "pattern" && <p>Email inválido!</p>}
 
         <PasswordInput
-          className={errors?.password && "inputError"}
+          className={errors?.password ? "inputError" : ""}
           width={400}
           padding={3}
           placeholder="Insira sua senha"
-          {...register("password", {
-            required: true,
-          })}
+          {...register("password", { required: true })}
         />
-        {errors?.password?.type === "required" && (
-          <p>A senha é obrigatoria é obrigratorio!</p>
-        )}
+        {errors?.password?.type === "required" && <p>A senha é obrigatória!</p>}
 
-        <Checkbox
-          {...register("checkPassword")}
-          >Remenber Password
-        </Checkbox>
+        <Checkbox {...register("checkPassword")}>Remember Password</Checkbox>
 
         <Button
-          width={"400px "}
+          width={"400px"}
           color={"white"}
           variant={"subtle"}
           backgroundColor={"#020c51"}
-          onClick={() => handleSubmit(onSubmit)()}
+          onClick={() => handleSubmit(handleAddUser)()}
         >
           Cadastrar
         </Button>
