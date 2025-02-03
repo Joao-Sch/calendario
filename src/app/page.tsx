@@ -5,6 +5,7 @@ import { Flex, Box } from "@chakra-ui/react";
 import { User } from "@/types/user";
 import { UserForm } from "@/components/myConponent/form";
 import { LoginImage } from "@/components/myConponent/loginImg";
+import { CalendarComponent } from "@/components/myConponent/calendar"
 
 export default function Home() {
   const [list, setList] = useState<User[]>([]);
@@ -31,8 +32,14 @@ export default function Home() {
     <Flex height="100vh" width="100vw">
       <LoginImage />
       <Box flex="1" display="flex" alignItems="center" justifyContent="center">
-        <UserForm currentUser={currentUser}  onAddItem={updateList}  setCurrentUser={setCurrentUser} />
+        <UserForm
+          currentUser={currentUser}
+          onAddItem={updateList}
+          setCurrentUser={setCurrentUser}
+        />
       </Box>
+      <h1>Meu Calendário</h1>
+      <CalendarComponent />
     </Flex>
   );
 }
