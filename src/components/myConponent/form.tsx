@@ -40,7 +40,7 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
           padding={3}
           maxLength={80}
           w={400}
-          {...register("email", {
+            {...register("email", {
             required: true,
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -48,10 +48,10 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
             },
             onChange: (value) => {
               if (currentUser) {
-                currentUser.email = value.target.value;
+              currentUser.email = value.target.value;
               }
             },
-          })}
+            })}
         />
         {errors?.email?.type === "required" && <p>O email é obrigatório!</p>}
         {errors?.email?.type === "pattern" && <p>Email inválido!</p>}
