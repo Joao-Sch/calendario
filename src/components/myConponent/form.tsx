@@ -8,9 +8,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { User } from "@/types/user";
 
 interface IProps {
-  currentUser?: User;
+  currentUser?: User | null; 
   onAddItem: (user: User) => void;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>; 
 }
 
 export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
@@ -27,6 +27,19 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
 
   const handleAddUser = (data: User) => {
     onAddItem(data);
+    fetch("http://localhost:3001/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+    
+      console.log("Usuário cadastrado:", data);
+    })
+    .catch((error) => {
+      console.error("Erro no cadastro:", error);
+    });
   };
 
   return (
@@ -53,7 +66,7 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
             },
             })}
         />
-        {errors?.email?.type === "required" && <p>O email é obrigatório!</p>}
+        {errors?.email?.type === "require d" && <p>O email é obrigatório!</p>}
         {errors?.email?.type === "pattern" && <p>Email inválido!</p>}
 
         <PasswordInput

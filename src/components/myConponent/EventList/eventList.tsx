@@ -1,3 +1,4 @@
+// components/EventList/eventList.tsx
 import React from "react";
 import "./eventList.css";
 import { Flex } from "@chakra-ui/react";

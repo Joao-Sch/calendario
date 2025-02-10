@@ -1,44 +1,45 @@
 "use client";
 
-/*import { useState } from "react";*/
-/*import { Flex, Box } from "@chakra-ui/react";*/
-/*import { User } from "@/types/user";*/
-import { MyCalendar } from "@/components/myConponent/myCalendar/myCalendar";
-/*import { UserForm } from "@/components/myConponent/form";
-import { LoginImage } from "@/components/myConponent/loginImg";*/
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Box } from "@chakra-ui/react";
+import { User } from "@/types/user";
+import { UserForm } from "@/components/myConponent/form";
+import { LoginImage } from "@/components/myConponent/loginImg";
 
 export default function Home() {
-  /*const [list, setList] = useState<User[]>([]);*/
-  /*const [currentUser, setCurrentUser] = useState<User>({} as User);*/
+  const [users, setUsers] = useState<User[]>([]);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const router = useRouter();
 
-  /*function updateList(newUser: User) {
-    if (!newUser) {
-      console.error("[ERROR]", "newUser not defined");
-      return;
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("allUsers");
+    if (storedUsers) {
+      setUsers(JSON.parse(storedUsers));
     }
-    console.log("new user", newUser);
-    setList((prevList) => {
-      return [...prevList, { ...newUser }];
-    });
-    localStorage.setItem("all users", JSON.stringify(list));
-    console.log("all users", list);
-  }*/
+  }, []);
 
-  console.log(
-    localStorage.getItem("all users") + "toma vagabunda pirocada de bandido"
-  );
+  useEffect(() => {
+    localStorage.setItem("allUsers", JSON.stringify(users));
+  }, [users]);
+
+  const handleLogin = (user: User) => {
+    setUsers((prevUsers) => [...prevUsers, user]);
+    setCurrentUser(user);
+    localStorage.setItem("currentUser", JSON.stringify(user));
+    router.push("/calendar");
+  };
 
   return (
-    <div className="">
-      <MyCalendar />
-      {/*<LoginImage />
+    <div style={{ display: "flex", height: "100vh" }}>
+      <LoginImage />
       <Box flex="1" display="flex" alignItems="center" justifyContent="center">
         <UserForm
-          currentUser={currentUser}
-          onAddItem={updateList}
+          currentUser={currentUser || undefined}
+          onAddItem={handleLogin}
           setCurrentUser={setCurrentUser}
         />
-      </Box>*/}
+      </Box>
     </div>
   );
 }
