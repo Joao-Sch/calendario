@@ -3,14 +3,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { PasswordInput } from "@/components/ui/password-input";
-import { Input, Button, Flex } from "@chakra-ui/react";
+import { Input, Flex } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { User } from "@/types/user";
+import Link from "next/link"; // Adicione esta linha no início do arquivo
 
 interface IProps {
-  currentUser?: User | null; 
+  currentUser?: User | null;
   onAddItem: (user: User) => void;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>; 
+  setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
@@ -18,42 +19,25 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<User>({
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  }); 
+  } = useForm<User>({ defaultValues: { email: "", password: "" } });
+
 
   const handleAddUser = (data: User) => {
     onAddItem(data);
-    fetch("http://localhost:3001/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-    .then((response) => response.json())
-    .then((data) => {
-    
-      console.log("Usuário cadastrado:", data);
-    })
-    .catch((error) => {
-      console.error("Erro no cadastro:", error);
-    });
+    console.log("Usuário cadastrado:", data);
   };
 
   return (
     <Flex align="center" margin={5} justify="center">
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <h1>Seja Bem-Vindo de Volta!</h1>
-
         <Input
           className={errors?.email ? "inputError" : ""}
           placeholder="Insira seu Email"
           padding={3}
           maxLength={80}
           w={400}
-            {...register("email", {
+          {...register("email", {
             required: true,
             pattern: {
               value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -61,12 +45,12 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
             },
             onChange: (value) => {
               if (currentUser) {
-              currentUser.email = value.target.value;
+                currentUser.email = value.target.value;
               }
             },
-            })}
+          })}
         />
-        {errors?.email?.type === "require d" && <p>O email é obrigatório!</p>}
+        {errors?.email?.type === "required" && <p>O email é obrigatório!</p>}
         {errors?.email?.type === "pattern" && <p>Email inválido!</p>}
 
         <PasswordInput
@@ -80,15 +64,22 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
 
         <Checkbox {...register("checkPassword")}>Remember Password</Checkbox>
 
-        <Button
-          width={"400px"}
-          color={"white"}
-          variant={"subtle"}
-          backgroundColor={"#020c51"}
-          onClick={() => handleSubmit(handleAddUser)()}
-        >
-          Cadastrar
-        </Button>
+        <Link href="/calendar" passHref>
+          <button
+            style={{
+              width: "400px",
+              color: "white",
+              backgroundColor: "#020c51",
+            }}
+            
+            onClick={handleSubmit(handleAddUser)}
+          >
+            Cadastrar
+          </button>
+        </Link>
+        <Link href="./calendar">
+        <a>vai karalho buceta foda disgraçaa arrombado desgrama</a>
+        </Link>
       </div>
     </Flex>
   );
