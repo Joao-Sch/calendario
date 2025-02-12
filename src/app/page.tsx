@@ -1,17 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-//import { useRouter } from "next/navigation";
 import { Box } from "@chakra-ui/react";
 import { User } from "@/types/user";
 import { UserForm } from "@/components/myConponent/form";
 import { LoginImage } from "@/components/myConponent/loginImg";
 
-
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
- // const router = useRouter();
 
   useEffect(() => {
     const storedUsers = localStorage.getItem("allUsers");
@@ -28,8 +25,7 @@ export default function Home() {
     setUsers((prevUsers) => [...prevUsers, user]);
     setCurrentUser(user);
     localStorage.setItem("currentUser", JSON.stringify(user));
-    //router.push("../app/calendar.tsx");
-  };
+  }
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>

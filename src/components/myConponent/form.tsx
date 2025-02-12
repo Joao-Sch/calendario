@@ -3,10 +3,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { PasswordInput } from "@/components/ui/password-input";
-import { Input, Flex } from "@chakra-ui/react";
+import { Input, Button, Flex } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { User } from "@/types/user";
-import Link from "next/link"; // Adicione esta linha no início do arquivo
+import { useRouter } from "next/navigation";
 
 interface IProps {
   currentUser?: User | null;
@@ -19,12 +19,23 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<User>({ defaultValues: { email: "", password: "" } });
+  } = useForm<User>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
+  const router = useRouter();
 
   const handleAddUser = (data: User) => {
     onAddItem(data);
     console.log("Usuário cadastrado:", data);
+  };
+
+  const handleButtonClick = () => {
+    handleSubmit(handleAddUser)();
+    router.push('/nova-pagina');
   };
 
   return (
@@ -64,22 +75,15 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
 
         <Checkbox {...register("checkPassword")}>Remember Password</Checkbox>
 
-        <Link href="/calendar" passHref>
-          <button
-            style={{
-              width: "400px",
-              color: "white",
-              backgroundColor: "#020c51",
-            }}
-            
-            onClick={handleSubmit(handleAddUser)}
-          >
-            Cadastrar
-          </button>
-        </Link>
-        <Link href="./calendar">
-        <a>vai karalho buceta foda disgraçaa arrombado desgrama</a>
-        </Link>
+        <Button
+          width={"400px"}
+          color={"white"}
+          variant={"subtle"}
+          backgroundColor={"#020c51"}
+          onClick={handleButtonClick}
+        >
+          Cadastrar
+        </Button>
       </div>
     </Flex>
   );
