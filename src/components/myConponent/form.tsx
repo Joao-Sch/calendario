@@ -35,7 +35,7 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
 
   const handleButtonClick = () => {
     handleSubmit(handleAddUser)();
-    router.push('/nova-pagina');
+    router.push('/calendar');
   };
 
   return (

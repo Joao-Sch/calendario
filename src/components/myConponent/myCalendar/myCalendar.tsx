@@ -14,11 +14,11 @@ export type Event = {
 };
 
 type EventType = {
-    id: string;
-    title: string;
-    description: string;
-    date: string; // Se a data estiver armazenada como string no localStorage
-  };
+  id: string;
+  title: string;
+  description: string;
+  date: string; // Se a data estiver armazenada como string no localStorage
+};
 
 interface MyCalendarProps {
   currentUser: { email: string }; // adapte conforme sua estrutura de usuário

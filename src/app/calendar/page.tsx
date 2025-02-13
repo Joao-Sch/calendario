@@ -19,12 +19,12 @@ export default function CalendarPage() {
 
   const handleLogout = () => {
     localStorage.removeItem("currentUser");
-    router.push("/login");
+    router.push("/home");
   };
 
   return (
     <Box padding={5}>
-      <Button onClick={handleLogout} colorScheme="red" mb={4}>
+      <Button onClick={handleLogout} colorScheme="red" mb={4} padding={"10px"}>
         Logout
       </Button>
       {currentUser && <MyCalendar currentUser={currentUser} />}
