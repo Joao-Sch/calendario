@@ -17,7 +17,7 @@ interface EventListProps {
 export const EventList: React.FC<EventListProps> = ({ events }) => {
   return (
     <Flex className="event-List">
-      <h1>Eventos</h1>
+      <h1>Eventos: </h1>
       {events.length > 0 ? (
         <ul>
           {events.map((event) => (

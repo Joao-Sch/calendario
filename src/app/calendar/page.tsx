@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Box, Button } from "@chakra-ui/react";
 import { MyCalendar } from "@/components/myConponent/myCalendar/myCalendar";
+import { Rating } from "@/components/ui/rating"
 import { User } from "@/types/user";
 
 export default function CalendarPage() {
@@ -18,7 +19,8 @@ export default function CalendarPage() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("currentUser");
+    //localStorage.removeItem("currentUser");
+    console.log(currentUser?.email)
     router.push("/home");
   };
 
@@ -28,6 +30,7 @@ export default function CalendarPage() {
         Logout
       </Button>
       {currentUser && <MyCalendar currentUser={currentUser} />}
+      <Rating allowHalf defaultValue={3.5} colorPalette="orange" display={"flex"} justifyContent={"center"}/>
     </Box>
   );
 }

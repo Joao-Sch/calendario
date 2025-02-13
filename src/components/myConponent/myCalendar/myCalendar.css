@@ -29,6 +29,7 @@
 .calendar-container .react-calendar__tile:hover {
     background-color: #e0e0e0;
     transform: scale(1.05);
+    color: #0056b3;
 }
 
 .calendar-container .react-calendar__tile--active {

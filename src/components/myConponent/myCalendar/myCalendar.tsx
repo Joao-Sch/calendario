@@ -47,6 +47,7 @@ export const MyCalendar: React.FC<MyCalendarProps> = ({ currentUser }) => {
   // Salva os eventos sempre que houver alteração
   useEffect(() => {
     localStorage.setItem(`events_${currentUser.email}`, JSON.stringify(events));
+    console.log(localStorage.getItem(`events_${currentUser.email}`));
   }, [events, currentUser.email]);
 
   const handleDateChange = (value: Date | Date[] | null) => {
@@ -61,7 +62,7 @@ export const MyCalendar: React.FC<MyCalendarProps> = ({ currentUser }) => {
     if (!selectedDate) return;
 
     const newEvent = {
-      id: (events.length + 1).toString(), // Para testes; considere usar uma lib como uuid
+      id: (events.length + 1).toString(),
       date: selectedDate,
       title,
       description,
@@ -69,6 +70,11 @@ export const MyCalendar: React.FC<MyCalendarProps> = ({ currentUser }) => {
 
     setEvents([...events, newEvent]);
     setShowForm(false);
+    console.log(JSON.stringify(events));
+    showEvents(JSON.stringify("id: " + newEvent.id + 
+                              " date: " + newEvent.date + 
+                              " titulo: " + newEvent.title + 
+                              " descrição: " + newEvent.description))
   };
 
   const toggleForm = () => {
@@ -85,8 +91,18 @@ export const MyCalendar: React.FC<MyCalendarProps> = ({ currentUser }) => {
     (event) => event.date.toDateString() === selectedDate?.toDateString()
   );
 
+  function showEvents(e: any) {
+    alert("eventos: " + e.toString())
+  }
+
   return (
     <div className="calendar-container">
+      <button
+        style={{backgroundColor: "red", color: "white", padding: "10px", borderRadius: "8px"}}
+        onClick={showEvents}
+      >
+        TESTE
+      </button>
       <h1>Meu Calendário</h1>
       <Calendar
         onChange={(value) => handleDateChange(value as Date | Date[] | null)}
