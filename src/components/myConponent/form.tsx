@@ -6,7 +6,8 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Input, Button, Flex } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { User } from "@/types/user";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface IProps {
   currentUser?: User | null;
@@ -26,7 +27,7 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
     },
   });
 
-  const router = useRouter();
+  //const router = useRouter();
 
   const handleAddUser = (data: User) => {
     onAddItem(data);
@@ -35,7 +36,7 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
 
   const handleButtonClick = () => {
     handleSubmit(handleAddUser)();
-    router.push('/calendar');
+    //router.push('/calendar');
   };
 
   return (
@@ -75,15 +76,16 @@ export const UserForm: React.FC<IProps> = ({ currentUser, onAddItem }) => {
 
         <Checkbox {...register("checkPassword")}>Remember Password</Checkbox>
 
-        <Button
-          width={"400px"}
-          color={"white"}
-          variant={"subtle"}
-          backgroundColor={"#020c51"}
-          onClick={handleButtonClick}
-        >
-          Cadastrar
-        </Button>
+        <Link href={"/calendar"} onClick={handleButtonClick}>
+          <Button
+            width={"400px"}
+            color={"white"}
+            variant={"subtle"}
+            backgroundColor={"#020c51"}
+          > 
+            Cadastrar
+          </Button>
+        </Link>
       </div>
     </Flex>
   );

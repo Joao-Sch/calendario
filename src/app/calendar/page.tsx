@@ -19,7 +19,6 @@ export default function CalendarPage() {
   }, []);
 
   const handleLogout = () => {
-    //localStorage.removeItem("currentUser");
     console.log(currentUser?.email)
     router.push("/home");
   };

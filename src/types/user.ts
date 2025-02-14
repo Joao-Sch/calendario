@@ -3,4 +3,5 @@ export type User = {
     password: string;
     id: number;
     checkPassword?: boolean;
+    isLogged: boolean;
 }

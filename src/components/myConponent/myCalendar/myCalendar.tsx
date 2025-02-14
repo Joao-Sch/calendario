@@ -95,11 +95,15 @@ export const MyCalendar: React.FC<MyCalendarProps> = ({ currentUser }) => {
     alert("eventos: " + e.toString())
   }
 
+  function showLocalStorage() {
+    alert(localStorage.getItem(`events_${currentUser.email}`));
+  }
+
   return (
     <div className="calendar-container">
       <button
-        style={{backgroundColor: "red", color: "white", padding: "10px", borderRadius: "8px"}}
-        onClick={showEvents}
+        onClick={showLocalStorage}
+        style={{backgroundColor: "red", padding: "10px"}}
       >
         TESTE
       </button>
