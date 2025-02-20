@@ -6,7 +6,6 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Input, Button, Flex } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { User } from "@/types/user";
-//import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 interface IProps {

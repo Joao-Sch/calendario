@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Calendar from "react-calendar";
 import { FormCalendar } from "../formCalendar/formCalendar";
 import { EventList } from "../EventList/eventList";
@@ -13,115 +13,64 @@ export type Event = {
   description: string;
 };
 
-type EventType = {
-  id: string;
-  title: string;
-  description: string;
-  date: string; // Se a data estiver armazenada como string no localStorage
-};
+// Função para criar eventos mock com datas válidas
+const createMockEvents = (): Event[] => [
+  { id: "1", date: new Date(2025, 1, 21), title: "Evento 1", description: "Descrição do Evento 1" },
+  { id: "2", date: new Date(2025, 1, 22), title: "Evento 2", description: "Descrição do Evento 2" },
+  { id: "3", date: new Date(2025, 1, 23), title: "Evento 3", description: "Descrição do Evento 3" },
+  { id: "4", date: new Date(2025, 1, 24), title: "Evento 4", description: "Descrição do Evento 4" },
+];
 
-interface MyCalendarProps {
-  currentUser: { email: string }; // adapte conforme sua estrutura de usuário
-}
-
-export const MyCalendar: React.FC<MyCalendarProps> = ({ currentUser }) => {
+export const MyCalendar: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [events, setEvents] = useState<Event[]>([]);
-  const [showForm, setShowForm] = useState(false);
+  const [events, setEvents] = useState<Event[]>(createMockEvents());
+  const [showForm, setShowForm] = useState<boolean>(false);
 
-  // Carrega os eventos do usuário do localStorage
-  useEffect(() => {
-    const storedEvents = localStorage.getItem(`events_${currentUser.email}`);
-    if (storedEvents) {
-      const parsedEvents = JSON.parse(storedEvents);
-      const eventsWithDate = parsedEvents.map((event: EventType) => ({
-        id: event.id,
-        title: event.title,
-        description: event.description,
-        date: new Date(event.date),
-      }));
-      setEvents(eventsWithDate);
-    }
-  }, [currentUser.email]);
-
-  // Salva os eventos sempre que houver alteração
-  useEffect(() => {
-    localStorage.setItem(`events_${currentUser.email}`, JSON.stringify(events));
-    console.log(localStorage.getItem(`events_${currentUser.email}`));
-  }, [events, currentUser.email]);
-
-  const handleDateChange = (value: Date | Date[] | null) => {
-    if (Array.isArray(value)) {
-      setSelectedDate(value[0]);
-    } else {
+  // Manipula a mudança de data no calendário
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleDateChange = (value: Date | Date[] | [Date, Date] | null, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (value instanceof Date) {
       setSelectedDate(value);
+    } else {
+      setSelectedDate(value && Array.isArray(value) && value[0] ? value[0] : null); // Se for um array, pega a primeira data
     }
   };
 
+  // Verifica se uma data tem evento
+  const isDateWithEvent = (date: Date) => events.some((event) => event.date.toDateString() === date.toDateString());
+
+  // Função para adicionar novos eventos ao estado
   const handleAddEvent = (title: string, description: string) => {
-    if (!selectedDate) return;
-
-    const newEvent = {
-      id: (events.length + 1).toString(),
-      date: selectedDate,
-      title,
-      description,
-    };
-
-    setEvents([...events, newEvent]);
-    setShowForm(false);
-    console.log(JSON.stringify(events));
-    showEvents(JSON.stringify("id: " + newEvent.id + 
-                              " date: " + newEvent.date + 
-                              " titulo: " + newEvent.title + 
-                              " descrição: " + newEvent.description))
+    if (selectedDate) {
+      const newEvent = {
+        id: (events.length + 1).toString(),
+        date: selectedDate,
+        title,
+        description,
+      };
+      setEvents((prevEvents) => [...prevEvents, newEvent]); // Adiciona o novo evento ao array dos eventos bolados
+      localStorage.setItem("eventArray", JSON.stringify(events))
+      console.log(events);
+      console.log(localStorage.getItem("eventArray"));
+      setShowForm(false); // Fecha o formulário após adicionar oevento bolado
+    }
   };
-
-  const toggleForm = () => {
-    setShowForm(!showForm);
-  };
-
-  const isDateWithEvent = ({ date }: { date: Date }) => {
-    return events.some(
-      (event) => event.date.toDateString() === date.toDateString()
-    );
-  };
-
-  const filteredEvents = events.filter(
-    (event) => event.date.toDateString() === selectedDate?.toDateString()
-  );
-
-  function showEvents(e: any) {
-    alert("eventos: " + e.toString())
-  }
-
-  function showLocalStorage() {
-    alert(localStorage.getItem(`events_${currentUser.email}`));
-  }
 
   return (
     <div className="calendar-container">
-      <button
-        onClick={showLocalStorage}
-        style={{backgroundColor: "red", padding: "10px"}}
-      >
-        TESTE
-      </button>
       <h1>Meu Calendário</h1>
       <Calendar
-        onChange={(value) => handleDateChange(value as Date | Date[] | null)}
+        onChange={handleDateChange}
         value={selectedDate}
-        tileContent={({ date }) =>
-          isDateWithEvent({ date }) && <div className="event-pointer"></div>
-        }
+        tileContent={({ date }) => isDateWithEvent(date) && <div className="event-pointer"></div>}
       />
       <div className="Form-toggle">
-        <button onClick={toggleForm}>
+        <button onClick={() => setShowForm(!showForm)}>
           {showForm ? "Cancelar" : "Adicionar Evento"}
         </button>
       </div>
       {showForm && <FormCalendar handleAddEvent={handleAddEvent} />}
-      <EventList events={filteredEvents} />
+      <EventList events={events.filter((event) => event.date.toDateString() === selectedDate?.toDateString())} />
     </div>
   );
 };

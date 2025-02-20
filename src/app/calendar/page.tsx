@@ -25,10 +25,10 @@ export default function CalendarPage() {
 
   return (
     <Box padding={5}>
-      <Button onClick={handleLogout} colorScheme="red" mb={4} padding={"10px"}>
+      <Button onClick={handleLogout} backgroundColor={"black"} mb={4} padding={"10px"} color={"white"} borderRadius={"10px"}>
         Logout
       </Button>
-      {currentUser && <MyCalendar currentUser={currentUser} />}
+      {currentUser && <MyCalendar />}
       <Rating allowHalf defaultValue={3.5} colorPalette="orange" display={"flex"} justifyContent={"center"}/>
     </Box>
   );
