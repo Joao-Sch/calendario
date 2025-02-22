@@ -5,6 +5,7 @@ import Calendar from "react-calendar";
 import { FormCalendar } from "../formCalendar/formCalendar";
 import { EventList } from "../EventList/eventList";
 import "./myCalendar.css";
+import { User } from "@/types/user";
 
 export type Event = {
   id: string;
@@ -21,14 +22,29 @@ const createMockEvents = (): Event[] => [
   { id: "4", date: new Date(2025, 1, 24), title: "Evento 4", description: "Descrição do Evento 4" },
 ];
 
-export const MyCalendar: React.FC = () => {
+// Função para carregar eventos do localStorage
+const loadEventsFromLocalStorage = (userId: string): Event[] => {
+  const storedEvents = localStorage.getItem(`eventArray_${userId}`);
+  if (storedEvents) {
+    return JSON.parse(storedEvents).map((event: Event) => ({
+      ...event,
+      date: new Date(event.date),
+    }));
+  }
+  return createMockEvents();
+};
+
+interface MyCalendarProps {
+  currentUser: User;
+}
+
+export const MyCalendar: React.FC<MyCalendarProps> = ({ currentUser }) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [events, setEvents] = useState<Event[]>(createMockEvents());
+  const [events, setEvents] = useState<Event[]>(loadEventsFromLocalStorage(currentUser.id.toString()));
   const [showForm, setShowForm] = useState<boolean>(false);
 
   // Manipula a mudança de data no calendário
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDateChange = (value: Date | Date[] | [Date, Date] | null, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleDateChange = (value: Date | Date[] | [Date, Date] | null) => {
     if (value instanceof Date) {
       setSelectedDate(value);
     } else {
@@ -36,10 +52,10 @@ export const MyCalendar: React.FC = () => {
     }
   };
 
-  // Verifica se uma data tem evento
+  // Verifica se tem evento nessa data
   const isDateWithEvent = (date: Date) => events.some((event) => event.date.toDateString() === date.toDateString());
 
-  // Função para adicionar novos eventos ao estado
+  // Função para adicionar novos eventos ao state
   const handleAddEvent = (title: string, description: string) => {
     if (selectedDate) {
       const newEvent = {
@@ -48,11 +64,12 @@ export const MyCalendar: React.FC = () => {
         title,
         description,
       };
-      setEvents((prevEvents) => [...prevEvents, newEvent]); // Adiciona o novo evento ao array dos eventos bolados
-      localStorage.setItem("eventArray", JSON.stringify(events))
-      console.log(events);
-      console.log(localStorage.getItem("eventArray"));
-      setShowForm(false); // Fecha o formulário após adicionar oevento bolado
+      const updatedEvents = [...events, newEvent];
+      setEvents(updatedEvents); // Adiciona o novo evento ao array dos eventos bolados
+      localStorage.setItem(`eventArray_${currentUser.id}`, JSON.stringify(updatedEvents));
+      console.log(updatedEvents);
+      console.log(localStorage.getItem(`eventArray_${currentUser.id}`));
+      setShowForm(false); // Fecha o formulário após adicionar o evento bolado
     }
   };
 
